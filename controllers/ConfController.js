@@ -4,11 +4,20 @@ const confModel = require('../models/ConfModel');
 
 const confGet = async (req, res) => {
     try {
-        const conf = await confModel.find();
+        const conf = await confModel.find({one: {$eq: req.query.one}});
         res.json(conf);
     } catch (e) {
         console.error('confGet', e);
     }
+};
+
+const initGet = async (req, res) => {
+  try {
+      const init = await confModel.distinct('one');
+      res.json(init);
+  } catch (e) {
+      console.error('innitGet', e);
+  }
 };
 
 const confAdd = async (req, res) => {
@@ -46,4 +55,5 @@ module.exports = {
     confDelete,
     confModify,
     confGet,
+    initGet,
 };
