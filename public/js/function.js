@@ -2,11 +2,12 @@
 
 const dropDownDiv = document.getElementById('ddd');
 const url = 'http://localhost:3000/conf'; // change url when uploading to server
-const but = document.getElementById('but');
+const ddd = document.getElementById('ddd');
+let stopper = true;
+let currentlySelected;
 let num = 0;
 let lights;
 let selections = [];
-let runLength;
 
 const fetchInit = async () =>{
     const response = await fetch(url + '/init');
@@ -24,33 +25,33 @@ const fetchField = async (field) =>{
 const caseMap = (selection, object) => {
   switch (selection) {
       case 0:
-          return object.one;
+          return ['one', object.one];
       case 1:
-          return object.two;
+          return ['two', object.two];
       case 2:
-          return object.three;
+          return ['three', object.three];
       case 3:
-          return object.four;
+          return ['four', object.four];
       case 4:
-          return object.five;
+          return ['five', object.five];
       case 5:
-          return object.six;
+          return ['six', object.six];
       case 6:
-          return object.seven;
+          return ['seven', object.seven];
       case 7:
-          return object.eight;
+          return ['eight', object.eight];
       case 8:
-          return object.nine;
+          return ['nine', object.nine];
       case 9:
-          return object.ten;
+          return ['ten', object.ten];
       case 10:
-          return object.eleven;
+          return ['eleven', object.eleven];
       case 11:
-          return object.twelve;
+          return ['twelve', object.twelve];
       case 12:
-          return object.thirteen;
+          return ['thirteen', object.thirteen];
       case 13:
-          return object.data;
+          return ['data', object.data];
   }
 };
 
@@ -58,62 +59,73 @@ window.addEventListener('load', async () =>{
 
     const data = await fetchInit();
 
-    dropDownDiv.innerHTML += `<select id="s0"></select>`;
+    dropDownDiv.innerHTML += `<h4>one</h4><select id="s0" class="dropdown"></select>`;
 
     let selection = document.getElementById("s0");
     selection.innerHTML +=`<option id="o0" name="default" selected="true" disabled="disabled">please select one</option>`;
 
     for(let i = 0; i < data.length; i++){
-        selection.innerHTML += `<option id="o'${num}''${i}'">${data[i]}</option>`;
+        selection.innerHTML += `<option id="o${num}${+i}" class="option" value="${data[i]}">${data[i]}</option>`;
     }
 });
 
-but.addEventListener('click', () => {
-    dropDownFunction(num);
-    num +=1;
-});
+ddd.onclick = (event) =>{
+    console.log(event.target);
+    if(event.target.className === 'dropdown'){
+        currentlySelected = event.target;
+    }
+    else if( event.target.className === 'option'){
+        dropDownFunction(num, currentlySelected);
+        num+=1;
+    }
+};
+
 
 //disables the default option and creates a new dropdown
-const dropDownFunction = async (count) => {
-    let current = document.getElementById("s" + count);
-    let remover = document.getElementsByName('default');
+const dropDownFunction = async (count, current) => {
     selections.push(current.value);
 
     if(count === 0){
         lights = await fetchField(current.value);
-         runLength = lights.length;
     }
 
-    if (current.value !== "please select one") {
+    if (current.value !== "please select one" && stopper === true) {
 
         document.getElementById("s" + count).disabled = true;
         count += 1;
-        dropDownDiv.innerHTML += `<select id="s${+count}"></select>`;
+        if (count < 13){
+
+            dropDownDiv.innerHTML += `<h4>${caseMap(count, lights[0])[0]}</h4><select id="s${+count}" class="dropdown"></select>`;
+
         let selection = document.getElementById("s" + count);
+
         selection.innerHTML += `<option id="o${+count}">please select one</option>`;
 
-        for(let i = 0; i < runLength; i++) {
-            let currentCase;
+        for (let i = 0; i < lights.length; i++) {
 
+            let currentCase;
             let counter = false;
 
-            for(let j = 0; j < selections.length; j++){
+            for (let j = 0; j < selections.length; j++) {
 
-                if(caseMap(j, lights[i]) !== selections[j]){
+                if (caseMap(j, lights[i])[1] !== selections[j]) {
                     counter = false;
                     j = selections.length;
-                }
-                else{
+                } else {
                     counter = true;
                 }
             }
 
-            if(counter === true){
-                currentCase = caseMap(count, lights[i]);
-                selection.innerHTML += `<option id="o'${count}''${i}'">${currentCase}</option>`;
+            if (counter === true) {
+                currentCase = caseMap(count, lights[i])[1];
+                selection.innerHTML += `<option id="o${count}${+i}" class="option" value="${currentCase}">${currentCase}</option>`;
                 counter = false;
             }
 
+        }
+    }
+        else{
+            stopper = false;
         }
     }
 
