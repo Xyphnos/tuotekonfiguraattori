@@ -1,0 +1,17 @@
+html body{
+}
+.dataInput{
+    width: 90%;
+}
+.Ifield{
+    width: 90%;
+}
+.column {
+    float: left;
+    width: 50%;
+}
+
+.row:after {
+    display: table;
+    clear: both;
+}

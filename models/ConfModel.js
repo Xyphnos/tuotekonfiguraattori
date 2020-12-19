@@ -17,6 +17,7 @@ const confSchema = new Schema({
     eleven: {type: String, required: true},
     twelve: {type: String, required: true},
     thirteen: {type: String, required: true},
+    data: {type: String, required: true},
 });
 
 module.exports = mongoose.model('Conf', confSchema);

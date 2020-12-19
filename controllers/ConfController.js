@@ -36,6 +36,7 @@ const confAdd = async (req, res) => {
             eleven: req.body.eleven,
             twelve: req.body.twelve,
             thirteen: req.body.thirteen,
+            data: req.body.data,
         });
         res.send(`conf created with id: ${post._id}.`);
     } catch(e){
