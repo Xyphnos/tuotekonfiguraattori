@@ -11,7 +11,6 @@ const port = 3000;
 
 const confRoute = require('./routers/ConfRouter');
 
-
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,8 +22,5 @@ app.use('/public',express.static('public'));
 
 app.use('/conf', confRoute);
 
+app.listen(port, () => console.log(`App listening on port ${port}!`));
 
-
-db.on('connected', () => {
-    app.listen(port, () => console.log(`App listening on port ${port}!`));
-});

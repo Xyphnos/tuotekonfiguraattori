@@ -16,9 +16,9 @@ const fetchInit = async () =>{
     return son;
 };
 const fetchField = async (field) =>{
-
     const response = await fetch(url + '?one=' + field.toString());
     const son = await response.json();
+    console.log(son)
     return son;
 
 };
@@ -67,7 +67,7 @@ const initialLoad = async () =>{
     selection.innerHTML +=`<option id="o0" name="default" selected="true" disabled="disabled">please select one</option>`;
 
     for(let i = 0; i < data.length; i++){
-        selection.innerHTML += `<option id="o${num}${+i}" class="option" value="${data[i]}">${data[i]}</option>`;
+        selection.innerHTML += `<option id="o${num}${+i}" class="option" value="${data[i].one}">${data[i].one}</option>`;
     }
     num = 0;
     stopper = true;
@@ -140,7 +140,7 @@ dropdownParent.onclick = (event) =>{
         num+=1;
     }
 };
-clearSelect.addEventListener('click', async () => {
+clearButton.addEventListener('click', async () => {
 dropdownParent.innerHTML = '';
 dataParent.innerHTML = '';
 initialLoad();
