@@ -1,8 +1,8 @@
 'use strict';
 
 const confModel = require('../models/ConfModel');
-const {poolPromise} = require('../database/db')
-const mssql = require('mssql')
+const {poolPromise} = require('../database/db');
+const mssql = require('mssql');
 
 const confGet = async (req, res) => {
     const pool = await poolPromise;
@@ -58,7 +58,7 @@ const confAdd = async (req, res) => {
         "'"+ req.body.twelve+ "'," +
         "'"+ req.body.thirteen+ "'," +
         data
-        +')'
+        +')';
     try {
         const conf = await result.query
         ('INSERT INTO product_data (one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, thirteen, data) VALUES' + values);

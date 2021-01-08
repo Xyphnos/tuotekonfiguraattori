@@ -18,7 +18,7 @@ const fetchInit = async () =>{
 const fetchField = async (field) =>{
     const response = await fetch(url + '?one=' + field.toString());
     const son = await response.json();
-    console.log(son)
+    console.log(son);
     return son;
 
 };
