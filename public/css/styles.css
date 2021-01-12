@@ -1,5 +1,8 @@
 html body{
 }
+#addForm{
+    height: 100%;
+}
 .dataInput{
     width: 90%;
 }

@@ -5,16 +5,25 @@ const dropdownParent = document.getElementById('dropdownParent');
 const dataParent = document.getElementById('dataParent');
 const clearButton = document.getElementById('clearSelect');
 let stopper = true;
-let currentlySelected;
+let currentlySelected = null;
 let num = 0;
 let lights;
 let selections = [];
+let inputs = [];
 
 const fetchInit = async () =>{
     const response = await fetch(url + '/init');
     const son = await response.json();
     return son;
 };
+
+const fetchFinal = async (array) =>{
+    const response = await fetch(url + '/final/'+ '?one=' + array[0]+ '&two=' + array[1]+ '&three=' + array[2]+ '&four=' + array[3]+ '&five=' + array[4]+ '&six=' + array[5]+ '&seven=' + array[6]+ '&eight=' + array[7]+ '&nine=' + array[8]+ '&ten=' + array[9]+ '&eleven=' + array[10]+ '&twelve=' + array[11]+ '&thirteen=' + array[12]);
+    const son = await response.json();
+    console.log(son);
+    return son;
+};
+
 const fetchField = async (field) =>{
     const response = await fetch(url + '?one=' + field.toString());
     const son = await response.json();
@@ -25,37 +34,34 @@ const fetchField = async (field) =>{
 
 
 const caseMap = (selection, object) => {
-  switch (selection) {
-      case 0:
-          return ['one', object.one];
-      case 1:
-          return ['two', object.two];
-      case 2:
-          return ['three', object.three];
-      case 3:
-          return ['four', object.four];
-      case 4:
-          return ['five', object.five];
-      case 5:
-          return ['six', object.six];
-      case 6:
-          return ['seven', object.seven];
-      case 7:
-          return ['eight', object.eight];
-      case 8:
-          return ['nine', object.nine];
-      case 9:
-          return ['ten', object.ten];
-      case 10:
-          return ['eleven', object.eleven];
-      case 11:
-          return ['twelve', object.twelve];
-      case 12:
-          return ['thirteen', object.thirteen];
-      case 13:
-          stopper = false;
-          return ['data', object.data];
-  }
+    switch (selection) {
+        case 0:
+            return ['one', object.one];
+        case 1:
+            return ['two', object.two];
+        case 2:
+            return ['three', object.three];
+        case 3:
+            return ['four', object.four];
+        case 4:
+            return ['five', object.five];
+        case 5:
+            return ['six', object.six];
+        case 6:
+            return ['seven', object.seven];
+        case 7:
+            return ['eight', object.eight];
+        case 8:
+            return ['nine', object.nine];
+        case 9:
+            return ['ten', object.ten];
+        case 10:
+            return ['eleven', object.eleven];
+        case 11:
+            return ['twelve', object.twelve];
+        case 12:
+            return ['thirteen', object.thirteen];
+    }
 };
 
 const initialLoad = async () =>{
@@ -111,17 +117,21 @@ const dropDownFunction = async (count, current) => {
                 }
 
                 if (counter === true) {
-                    currentCase = caseMap(count, lights[i])[1];
-                    selection.innerHTML += `<option id="o${count}${+i}" class="option" value="${currentCase}">${currentCase}</option>`;
+                    currentCase = caseMap(count, lights[i]);
+                    selection.innerHTML += `<option id="o${count}${+i}" class="option" value="${currentCase[1]}">${currentCase[1]}</option>`;
                     counter = false;
                 }
 
             }
+            console.log(count)
         }
         else{
-            dataParent.innerText = caseMap(13, lights[13]);
+            console.log('oh YEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH');
+            fetchFinal(inputs);
+            stopper = false;
         }
     }
+    console.log(inputs)
 
 };
 
@@ -136,13 +146,13 @@ dropdownParent.onclick = (event) =>{
     }
     else if( event.target.className === 'option'){
         document.getElementById('o' + num).innerText = event.target.value;
+        inputs.push(event.target.value);
         dropDownFunction(num, currentlySelected);
         num+=1;
     }
 };
 clearButton.addEventListener('click', async () => {
-dropdownParent.innerHTML = '';
-dataParent.innerHTML = '';
-initialLoad();
+    dropdownParent.innerHTML = '';
+    dataParent.innerHTML = '';
+    initialLoad();
 });
-
