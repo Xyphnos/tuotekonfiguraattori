@@ -9,6 +9,8 @@ router.get('/final', controller.confGetId);
 
 router.get('/init', controller.initGet);
 
+router.get('/links', controller.linksGet);
+
 router.post('/', controller.confAdd);
 
 router.put('/', controller.confModify);

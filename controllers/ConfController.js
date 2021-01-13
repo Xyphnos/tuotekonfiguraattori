@@ -20,6 +20,23 @@ const confGet = async (req, res) => {
     }*/
 };
 
+const linksGet = async (req, res) => {
+    const pool = await poolPromise;
+    const result = await pool.request();
+    try {
+        const conf = await result.query('SELECT * FROM product_info WHERE id='+"'"+req.query.id+"'");
+        res.send(conf.recordset);
+    } catch (e) {
+        console.error('confGet', e);
+    }
+    /*try {
+        const conf = await confModel.find({one: {$eq: req.query.one}});
+        res.json(conf);
+    } catch (e) {
+        console.error('confGet', e);
+    }*/
+};
+
 const confGetId = async (req, res) => {
     const pool = await poolPromise;
     const result = await pool.request();
@@ -107,6 +124,7 @@ module.exports = {
     confDelete,
     confModify,
     confGet,
+    linksGet,
     confGetId,
     initGet,
 };

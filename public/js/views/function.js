@@ -17,17 +17,22 @@ const fetchInit = async () =>{
     return son;
 };
 
+const fetchLinks = async (id, name) =>{
+    const response = await fetch(url + '/links/' + '?id=' + id);
+    const son = await response.json();
+    const itemize = [name, son];
+    return itemize
+};
+
 const fetchFinal = async (array) =>{
     const response = await fetch(url + '/final/'+ '?one=' + array[0]+ '&two=' + array[1]+ '&three=' + array[2]+ '&four=' + array[3]+ '&five=' + array[4]+ '&six=' + array[5]+ '&seven=' + array[6]+ '&eight=' + array[7]+ '&nine=' + array[8]+ '&ten=' + array[9]+ '&eleven=' + array[10]+ '&twelve=' + array[11]+ '&thirteen=' + array[12]);
     const son = await response.json();
-    console.log(son);
     return son;
 };
 
 const fetchField = async (field) =>{
     const response = await fetch(url + '?one=' + field.toString());
     const son = await response.json();
-    console.log(son);
     return son;
 
 };
@@ -67,17 +72,18 @@ const caseMap = (selection, object) => {
 const initialLoad = async () =>{
     const data = await fetchInit();
 
-    dropdownParent.innerHTML += `<p>one</p><select id="s0" class="dropdown"></select>`;
+    dropdownParent.innerHTML += `<p>one</p><select id="selection0" class="dropdown"></select>`;
 
-    let selection = document.getElementById("s0");
-    selection.innerHTML +=`<option id="o0" name="default" selected="true" disabled="disabled">please select one</option>`;
+    let selection = document.getElementById("selection0");
+    selection.innerHTML +=`<option id="default0" name="default" selected="true" disabled="disabled">please select one</option>`;
 
     for(let i = 0; i < data.length; i++){
-        selection.innerHTML += `<option id="o${num}${+i}" class="option" value="${data[i].one}">${data[i].one}</option>`;
+        selection.innerHTML += `<option id="option${num}${+i}" class="option" value="${data[i].one}">${data[i].one}</option>`;
     }
     num = 0;
     stopper = true;
     selections = [];
+    inputs = [];
     lights = '';
 };
 
@@ -91,15 +97,15 @@ const dropDownFunction = async (count, current) => {
 
     if (current.value !== "please select one" && stopper === true) {
 
-        document.getElementById("s" + count).disabled = true;
+        document.getElementById("selection" + count).disabled = true;
         count += 1;
         if (count < 13){
 
-            dropdownParent.innerHTML += `<p>${caseMap(count, lights[0])[0]}</p><select id="s${+count}" class="dropdown"></select>`;
+            dropdownParent.innerHTML += `<p>${caseMap(count, lights[0])[0]}</p><select id="selection${+count}" class="dropdown"></select>`;
 
-            let selection = document.getElementById("s" + count);
+            let selection = document.getElementById("selection" + count);
 
-            selection.innerHTML += `<option id="o${+count}" selected="true" disabled="disabled">please select one</option>`;
+            selection.innerHTML += `<option id="default${+count}" selected="true" disabled="disabled">please select one</option>`;
 
             for (let i = 0; i < lights.length; i++) {
 
@@ -111,27 +117,36 @@ const dropDownFunction = async (count, current) => {
                     if (caseMap(j, lights[i])[1] !== selections[j]) {
                         counter = false;
                         j = selections.length;
-                    } else {
+                    }
+                    else {
                         counter = true;
                     }
                 }
 
                 if (counter === true) {
-                    currentCase = caseMap(count, lights[i]);
-                    selection.innerHTML += `<option id="o${count}${+i}" class="option" value="${currentCase[1]}">${currentCase[1]}</option>`;
+                    currentCase = await caseMap(count, lights[i]);
+                    selection.innerHTML += `<option id="option${count}${+i}" class="option" value="${currentCase[1]}">${currentCase[1]}</option>`;
                     counter = false;
                 }
-
             }
-            console.log(count)
+            for(let i = 1; i < selection.childElementCount; i++){
+                for(let j = 2; j < selection.childElementCount; j++) {
+                    if (selection.children[i].value === selection.children[j].value) {
+                        selection.removeChild(selection.childNodes[j]);
+                    }
+                }
+            }
         }
         else{
-            console.log('oh YEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH');
-            fetchFinal(inputs);
+            const fetchData = await fetchFinal(inputs);
+            const dataItems = await fetchLinks(fetchData[0].id, fetchData[0].productName);
+            dataParent.innerHTML = `<h1 class="productName">${dataItems[0]}</h1>`;
+            for(let i = 0; i < dataItems[1].length; i++){
+                dataParent.innerHTML += `<br><link href="${dataItems[1][i].link} class='productInfo'">${dataItems[1][i].link}</link><br>`;
+            }
             stopper = false;
         }
     }
-    console.log(inputs)
 
 };
 
@@ -140,12 +155,11 @@ window.addEventListener('load', async () =>{
 });
 
 dropdownParent.onclick = (event) =>{
-    console.log(event.target);
     if(event.target.className === 'dropdown'){
         currentlySelected = event.target;
     }
     else if( event.target.className === 'option'){
-        document.getElementById('o' + num).innerText = event.target.value;
+        document.getElementById('default' + num).innerText = event.target.value;
         inputs.push(event.target.value);
         dropDownFunction(num, currentlySelected);
         num+=1;
