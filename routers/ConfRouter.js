@@ -11,11 +11,11 @@ router.get('/init', controller.initGet);
 
 router.get('/links', controller.linksGet);
 
+router.get('/all', controller.getAll);
+
 router.post('/', controller.confAdd);
 
-router.put('/', controller.confModify);
-
-router.delete('/', controller.confDelete);
+router.delete('/delete', controller.confDelete);
 
 
 module.exports = router;

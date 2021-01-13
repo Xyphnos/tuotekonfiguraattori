@@ -12,12 +12,6 @@ const confGet = async (req, res) => {
     } catch (e) {
         console.error('confGet', e);
     }
-    /*try {
-        const conf = await confModel.find({one: {$eq: req.query.one}});
-        res.json(conf);
-    } catch (e) {
-        console.error('confGet', e);
-    }*/
 };
 
 const linksGet = async (req, res) => {
@@ -65,6 +59,17 @@ const initGet = async (req, res) => {
     }
 };
 
+const getAll = async (req, res) =>{
+    const pool = await poolPromise;
+    const result = await pool.request();
+    try {
+        const conf = await result.query('SELECT * FROM product_data');
+        res.send(conf.recordset);
+    } catch (e) {
+        console.error('confGet', e);
+    }
+};
+
 const confAdd = async (req, res) => {
 
     const pool = await poolPromise;
@@ -88,43 +93,67 @@ const confAdd = async (req, res) => {
         +')';
 
     try {
-        const conf = await result.query
-        ('INSERT INTO product_data (productName, one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, thirteen) VALUES' + values + '; SELECT SCOPE_IDENTITY() AS id;');
-        res.send(conf.recordset);
+        const dupe = await result.query
+        ('SELECT * FROM product_data WHERE productName=' + "'"+req.body.productName+"'");
 
-        for(let i = 0; i < dataE; i++){
-            console.log(req.body.data[i]);
-            const Dvalues = '('+
-                "'"+ req.body.data[i] + "',"
-                + conf.recordset[0].id
-                +')';
+        if(dupe.rowsAffected[0] !== 0){
+            console.log('duped');
+            res.send([{id: 'duplicate entry'}])
+        }
+        else {
             try {
-                const conffi = await result.query
-                ('INSERT INTO product_info (link, id) VALUES' + Dvalues);
-                res.send(conffi.recordset);
+                const conf = await result.query
+                ('INSERT INTO product_data (productName, one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, thirteen) VALUES' + values + '; SELECT SCOPE_IDENTITY() AS id;');
+                res.send(conf.recordset);
+
+                for(let i = 0; i < dataE; i++){
+                    console.log(req.body.data[i]);
+                    const Dvalues = '('+
+                        "'"+ req.body.data[i] + "',"
+                        + conf.recordset[0].id
+                        +')';
+                    try {
+                        const conffi = await result.query
+                        ('INSERT INTO product_info (link, id) VALUES' + Dvalues);
+                        res.send(conffi.recordset);
+                    } catch (e) {
+                        console.error('confGet', e);
+                    }
+                }
+
             } catch (e) {
                 console.error('confGet', e);
             }
         }
+    } catch (e) {
+    console.error('dupecheck', e);
+    }
+};
 
+const confDelete = async (req, res) => {
+    console.log(req.body.id);
+    const pool = await poolPromise;
+    const result = await pool.request();
+    try {
+        const conffi = await result.query('DELETE FROM product_info WHERE id='+"'"+req.body.id+"'");
+        res.send(conffi.recordset);
+        try {
+            const conf = await result.query('DELETE FROM product_data WHERE id='+"'"+req.body.id+"'");
+            res.send(conf.recordset);
+        } catch (e) {
+            console.error('confGet', e);
+        }
     } catch (e) {
         console.error('confGet', e);
     }
 };
 
-const confDelete = async (req, res) => {
-
-};
-const confModify = async (req, res) => {
-
-};
-
 module.exports = {
     confAdd,
     confDelete,
-    confModify,
     confGet,
     linksGet,
     confGetId,
     initGet,
+    getAll,
 };

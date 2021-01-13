@@ -1,5 +1,9 @@
 html body{
 }
+#errorMessage{
+    text-align: center;
+    color: red;
+}
 #addForm{
     height: 100%;
 }

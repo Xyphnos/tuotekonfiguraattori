@@ -5,8 +5,8 @@ const url = 'http://localhost:3000'; // change url when uploading to server
 const input = document.getElementsByTagName('input');
 const newLink = document.getElementById('newLink');
 const linkDiv = document.getElementById('linkDiv');
+const errorMessage = document.getElementById('errorMessage');
 let num = 1;
-
 
 addForm.addEventListener('submit', async (evt) => {
 
@@ -24,17 +24,18 @@ addForm.addEventListener('submit', async (evt) => {
         inputs.data[i] = `${input[i + 14].value}`;
     }
 
-    console.log(inputs);
     const fetchOptions = {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(inputs)
     };
 
-    console.log(inputs);
     const response = await fetch(url + '/conf', fetchOptions);
     const json = await response.json();
     console.log('add response', json);
+    if(json[0].id === 'duplicate entry'){
+        errorMessage.innerText = 'An item with this name already exists'
+    }
 });
 
 newLink.addEventListener('click', (evt) =>{
@@ -44,3 +45,4 @@ newLink.addEventListener('click', (evt) =>{
     linkDiv.innerHTML += `<input type="text" name="${'data' + num}" class="Ifield"><br><br>`;
     num++;
 });
+
