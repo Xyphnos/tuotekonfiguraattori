@@ -72,10 +72,10 @@ const caseMap = (selection, object) => {
 const initialLoad = async () =>{
     const data = await fetchInit();
 
-    dropdownParent.innerHTML += `<p>one</p><select id="selection0" class="dropdown"></select>`;
+    dropdownParent.innerHTML += `<p class="componentTitle">one</p><select id="selection0" class="dropdown"></select>`;
 
     let selection = document.getElementById("selection0");
-    selection.innerHTML +=`<option id="default0" name="default" selected="true" disabled="disabled">please select one</option>`;
+    selection.innerHTML +=`<option class="default" id="default0" name="default" selected="true" disabled="disabled">please select one</option>`;
 
     for(let i = 0; i < data.length; i++){
         selection.innerHTML += `<option id="option${num}${+i}" class="option" value="${data[i].one}">${data[i].one}</option>`;
@@ -95,17 +95,20 @@ const dropDownFunction = async (count, current) => {
         lights = await fetchField(current.value);
     }
 
+
     if (current.value !== "please select one" && stopper === true) {
+
+        const length = Object.keys(lights[0]).length - 2;
 
         document.getElementById("selection" + count).disabled = true;
         count += 1;
-        if (count < 13){
+        if (count < length){
 
-            dropdownParent.innerHTML += `<p>${caseMap(count, lights[0])[0]}</p><select id="selection${+count}" class="dropdown"></select>`;
+            dropdownParent.innerHTML += `<p class="componentTitle">${caseMap(count, lights[0])[0]}</p><select id="selection${+count}" class="dropdown"></select>`;
 
             let selection = document.getElementById("selection" + count);
 
-            selection.innerHTML += `<option id="default${+count}" selected="true" disabled="disabled">please select one</option>`;
+            selection.innerHTML += `<option class="default" id="default${+count}" selected="true" disabled="disabled">please select one</option>`;
 
             for (let i = 0; i < lights.length; i++) {
 
@@ -142,7 +145,7 @@ const dropDownFunction = async (count, current) => {
             const dataItems = await fetchLinks(fetchData[0].id, fetchData[0].productName);
             dataParent.innerHTML = `<h1 class="productName">${dataItems[0]}</h1>`;
             for(let i = 0; i < dataItems[1].length; i++){
-                dataParent.innerHTML += `<br><a href="${dataItems[1][i].link} class='productInfo'">${dataItems[1][i].link}</a><br>`;
+                dataParent.innerHTML += `<p class="productInfo"><a href="${dataItems[1][i].link}">${dataItems[1][i].link}</a></p>`;
             }
             stopper = false;
         }

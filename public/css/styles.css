@@ -1,4 +1,7 @@
 html body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 #errorMessage{
     text-align: center;
@@ -21,4 +24,67 @@ html body{
 .row:after {
     display: table;
     clear: both;
+}
+.dropdown {
+    width: 80%;
+    padding: 0;
+    border: 2px solid black;
+}
+.option {
+    border: black;
+}
+.header{
+    color: white;
+    text-align: center;
+    background-color: #0384fc;
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+}
+.productName{
+    text-align: center;
+}
+.productInfo{
+    padding-bottom: 5px;
+}
+.componentTitle{
+    padding: 0;
+    margin: 0;
+}
+#renderParent{
+
+}
+#addForm{
+
+}
+#dataDisplay{
+
+}
+.wrap{
+    padding: 3%;
+    margin: 0 auto;
+    position: relative;
+}
+#dropdownParent{
+    width: 50%;
+    float: left;
+}
+#dataParent{
+    text-align: center;
+    background-color: #c7c7c7;
+    width: 50%;
+    float: right;
+}
+#logo{
+    padding-top: 4px;
+    height: 40%;
+    width: 40%;
+}
+#clearSelect{
+    border: none;
+    height: 25px;
+    border-radius: 8px;
+    color: white;
+    background-color: #0384fc;
 }
