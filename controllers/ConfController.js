@@ -72,6 +72,8 @@ const getAll = async (req, res) =>{
 
 const confAdd = async (req, res) => {
 
+    console.log('name ' + req.body.productName);
+
     const pool = await poolPromise;
     const result = await pool.request();
     const dataE = Object.keys(req.body.data).length;
@@ -100,6 +102,10 @@ const confAdd = async (req, res) => {
             console.log('duped');
             res.send([{id: 'duplicate entry'}])
         }
+        else if(req.body.productName === null || req.body.productName === ''){
+            console.log('nulled');
+            res.send([{id: 'null value'}])
+        }
         else {
             try {
                 const conf = await result.query
@@ -107,14 +113,15 @@ const confAdd = async (req, res) => {
                 res.send(conf.recordset);
 
                 for(let i = 0; i < dataE; i++){
-                    console.log(req.body.data[i]);
+                    console.log(req.body.data);
                     const Dvalues = '('+
-                        "'"+ req.body.data[i] + "',"
+                        "'"+ req.body.data[i].name + "',"+
+                        "'"+ req.body.data[i].address + "',"
                         + conf.recordset[0].id
                         +')';
                     try {
                         const conffi = await result.query
-                        ('INSERT INTO product_info (link, id) VALUES' + Dvalues);
+                        ('INSERT INTO product_info (name, link, id) VALUES' + Dvalues);
                         res.send(conffi.recordset);
                     } catch (e) {
                         console.error('confGet', e);
@@ -131,7 +138,6 @@ const confAdd = async (req, res) => {
 };
 
 const confDelete = async (req, res) => {
-    console.log(req.body.id);
     const pool = await poolPromise;
     const result = await pool.request();
     try {

@@ -3,6 +3,8 @@
 const addForm = document.getElementById('addForm');
 const url = 'http://localhost:3000'; // change url when uploading to server
 const input = document.getElementsByTagName('input');
+const names = document.getElementsByClassName('NField');
+const links = document.getElementsByClassName('LField');
 const newLink = document.getElementById('newLink');
 const linkDiv = document.getElementById('linkDiv');
 const errorMessage = document.getElementById('errorMessage');
@@ -12,6 +14,8 @@ addForm.addEventListener('submit', async (evt) => {
 
     evt.preventDefault();
 
+    console.log(links.length);
+
     let inputs = {};
 
     for (let i = 0; i < 14; i++){
@@ -20,8 +24,9 @@ addForm.addEventListener('submit', async (evt) => {
 
     inputs['data'] = {};
 
-    for (let i = 0; i + 14 < input.length; i++){
-        inputs.data[i] = `${input[i + 14].value}`;
+    for (let i = 0; i < links.length; i++){
+        inputs.data[i] = {name: `${names[i].value}`, address: `${links[i].value}`};
+
     }
 
     const fetchOptions = {
@@ -34,7 +39,10 @@ addForm.addEventListener('submit', async (evt) => {
     const json = await response.json();
     console.log('add response', json);
     if(json[0].id === 'duplicate entry'){
-        errorMessage.innerText = 'An item with this name already exists'
+        errorMessage.innerText = 'An item with this name already exists!'
+    }
+    else if(json[0].id === 'null value'){
+        errorMessage.innerText = 'Product needs a name!'
     }
 });
 
@@ -42,7 +50,8 @@ newLink.addEventListener('click', (evt) =>{
 
     evt.preventDefault();
 
-    linkDiv.innerHTML += `<input type="text" name="${'data' + num}" class="Ifield"><br><br>`;
+    linkDiv.innerHTML += `<input type="text" name="${'name' + num}" class="NField" placeholder="Displayed name for the link..."><br>
+<input type="text" name="${'data' + num}" class="LField" placeholder="Link to the file URL..."><br><br>`;
     num++;
 });
 

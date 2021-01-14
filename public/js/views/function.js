@@ -143,9 +143,10 @@ const dropDownFunction = async (count, current) => {
         else{
             const fetchData = await fetchFinal(inputs);
             const dataItems = await fetchLinks(fetchData[0].id, fetchData[0].productName);
+            console.log(dataItems);
             dataParent.innerHTML = `<h1 class="productName">${dataItems[0]}</h1>`;
             for(let i = 0; i < dataItems[1].length; i++){
-                dataParent.innerHTML += `<p class="productInfo"><a href="${dataItems[1][i].link}">${dataItems[1][i].link}</a></p>`;
+                dataParent.innerHTML += `<p class="productInfo"><a href="${dataItems[1][i].link}">${dataItems[1][i].name}</a></p>`;
             }
             stopper = false;
         }

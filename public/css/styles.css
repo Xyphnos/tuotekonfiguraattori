@@ -16,6 +16,14 @@ html body{
 .Ifield{
     width: 90%;
 }
+.LField{
+    width: 90%;
+    margin-bottom: 2px;
+}
+.NField{
+    width: 90%;
+    margin-bottom: 2px;
+}
 .column {
     float: left;
     width: 50%;
@@ -44,6 +52,7 @@ html body{
 }
 .productName{
     text-align: center;
+    font-size: 25px;
 }
 .productInfo{
     padding-bottom: 5px;
@@ -73,9 +82,15 @@ html body{
 #dataParent{
     text-align: center;
     background-color: #c7c7c7;
+    margin-bottom: 10px;
+    min-height: 200px;
+
+}
+.rightFloat{
     width: 50%;
     float: right;
 }
+
 #logo{
     padding-top: 4px;
     height: 40%;
